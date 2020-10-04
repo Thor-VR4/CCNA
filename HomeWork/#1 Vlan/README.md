@@ -9,4 +9,4 @@
 5. Проверить работоспособность маршрутизации.
 
 ## Схема сети
-![alt-текст](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Текст заголовка логотипа 1")
+![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%231%20Vlan/Vlan.png "Стенд №1")
