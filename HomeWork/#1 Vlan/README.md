@@ -12,6 +12,26 @@
 ## Схема сети
 ![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%231%20Vlan/Vlan.png "Стенд №1")
 
+## Настройка компонентов
+Изменения на маршрутизаторах сводятся к:
+1. Настройке удаленного доступа и параметров авторизации
+  К примеру:
+  ```
+  service password-encryption
+  enable secret *****
+  !
+  line con 0
+    password *****
+    login
+  !
+  line vty 0 4
+    password *****
+    login
+  !
+  ```
+2. Настройке Vlan на магистральных и конечных портах
+
+
 ## Итоговая конфигурация
 1. [R1](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%231%20Vlan/config/R1.txt)
 1. [S1](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%231%20Vlan/config/S1.txt)
