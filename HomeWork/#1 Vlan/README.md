@@ -64,6 +64,66 @@
    ```
 ## Проверка работоспособности
 Проверка проводилась с помощью команды ping на подключенных к сети устройствах. Были получены ответы от всех хостов, что свидетельствует о корректной настройке оборудования.
+Доступность default gateway с PC-A
+```
+C:\>ping 192.168.3.1
+
+Pinging 192.168.3.1 with 32 bytes of data:
+
+Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.1: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.3.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+Доступность PC-B c PC-A
+```
+C:\>ping 192.168.4.3
+
+Pinging 192.168.4.3 with 32 bytes of data:
+
+Reply from 192.168.4.3: bytes=32 time=1ms TTL=127
+Reply from 192.168.4.3: bytes=32 time=1ms TTL=127
+Reply from 192.168.4.3: bytes=32 time<1ms TTL=127
+Reply from 192.168.4.3: bytes=32 time<1ms TTL=127
+
+Ping statistics for 192.168.4.3:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+```
+Доступность коммутатора S2 с PC-A
+```
+C:\>ping 192.168.3.12
+
+Pinging 192.168.3.12 with 32 bytes of data:
+
+Reply from 192.168.3.12: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.12: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.12: bytes=32 time<1ms TTL=255
+Reply from 192.168.3.12: bytes=32 time=1ms TTL=255
+
+Ping statistics for 192.168.3.12:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+```
+Трассировка от PC-B к PC-A
+```
+Packet Tracer PC Command Line 1.0
+C:\>tracert 192.168.3.3
+
+Tracing route to 192.168.3.3 over a maximum of 30 hops: 
+
+  1   4 ms      0 ms      0 ms      192.168.4.1
+  2   0 ms      0 ms      0 ms      192.168.3.3
+
+Trace complete.
+```
 
 ## Итоговая конфигурация
 1. [R1](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%231%20Vlan/config/R1.txt)
