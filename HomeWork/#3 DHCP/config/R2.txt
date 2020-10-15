@@ -1,0 +1,85 @@
+!
+version 15.4
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname R2
+!
+!
+!
+enable secret 5 $1$mERr$9cTjUIEqNGurQiFU.ZeCi1
+!
+!
+ip dhcp excluded-address 192.168.1.97
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ ip address 10.0.0.2 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ ip address 192.168.1.97 255.255.255.240
+ ip helper-address 10.0.0.1
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.0.0.1 
+!
+ip flow-export version 9
+!
+!
+!
+banner motd  Authorized Access Only! 
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+!
+line aux 0
+!
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+ login
+!
+!
+!
+end
+

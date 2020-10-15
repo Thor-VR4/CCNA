@@ -1,0 +1,108 @@
+!
+version 15.4
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname R1
+!
+!
+!
+enable secret 5 $1$mERr$9cTjUIEqNGurQiFU.ZeCi1
+!
+!
+ip dhcp excluded-address 192.168.1.1 192.168.1.5
+ip dhcp excluded-address 192.168.1.97 192.168.1.101
+!
+ip dhcp pool A
+ network 192.168.1.0 255.255.255.192
+ default-router 192.168.1.1
+ domain-name ccna-lab.com
+ip dhcp pool R2_Client_LAN
+ network 192.168.1.96 255.255.255.240
+ default-router 192.168.1.97
+ domain-name ccna-lab.com
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ ip address 10.0.0.1 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1.100
+ description Clients
+ encapsulation dot1Q 100
+ ip address 192.168.1.1 255.255.255.192
+!
+interface GigabitEthernet0/0/1.200
+ description Management
+ encapsulation dot1Q 200
+ ip address 192.168.1.65 255.255.255.224
+!
+interface GigabitEthernet0/0/1.1000
+ description Native
+ encapsulation dot1Q 1000
+ no ip address
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.0.0.2 
+!
+ip flow-export version 9
+!
+!
+!
+banner motd  Authorized Access Only! 
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+!
+line aux 0
+!
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+ login
+!
+!
+!
+end
+
