@@ -203,3 +203,42 @@ Et0/1               Root FWD 1000      128.2    Shr
 Et0/2               Desg FWD 2000000   128.3    Shr Edge 
 ```
 В результате клиентские vlan имеют по одному активному линку к каждому L3 коммутатору(SW4,5). В дополнение к этому на SW4 и SW5 реализовано резервирование шлюза по умолчанию с балансировкой нагрузки при помощи протокола glbp.
+Состояние glbp группы для vlan 21 на SW5
+```
+Vlan21 - Group 21
+  State is Active
+    1 state change, last state change 06:37:19
+  Virtual IP address is 10.0.1.1
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.504 secs
+  Redirect time 600 sec, forwarder timeout 14400 sec
+  Preemption enabled, min delay 60 sec
+  Active is local
+  Standby is 10.0.1.4, priority 100 (expires in 9.376 sec)
+  Priority 110 (configured)
+  Weighting 100 (default 100), thresholds: lower 1, upper 100
+  Load balancing: round-robin
+  Group members:
+    aabb.cc80.4000 (10.0.1.4)
+    aabb.cc80.5000 (10.0.1.5) local
+  There are 2 forwarders (1 active)
+  Forwarder 1
+    State is Listen
+      4 state changes, last state change 06:35:37
+    MAC address is 0007.b400.1501 (learnt)
+    Owner ID is aabb.cc80.4000
+    Redirection enabled, 599.392 sec remaining (maximum 600 sec)
+    Time to live: 14399.392 sec (maximum 14400 sec)
+    Preemption enabled, min delay 30 sec
+    Active is 10.0.1.4 (primary), weighting 100 (expires in 10.688 sec)
+    Client selection count: 1
+  Forwarder 2
+    State is Active
+      1 state change, last state change 06:36:14
+    MAC address is 0007.b400.1502 (default)
+    Owner ID is aabb.cc80.5000
+    Redirection enabled
+    Preemption enabled, min delay 30 sec
+    Active is local, weighting 100
+    Client selection count: 1
+```
