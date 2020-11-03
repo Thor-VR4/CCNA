@@ -151,7 +151,7 @@ SW29 | 10.4.2.29 |  |
 ##Настройка L2 сети и резервирование
 
 На L2 уровне избыточность имеется в зонах Москва и С.-Петербург.
-В С.-Петербурге был организован etherchanel между коммутаторами SW9-10
+В С.-Петербурге был организован etherchannel между коммутаторами SW9-10
 ```
 SW10#show etherchannel 1 summary 
 Flags:  D - down        P - bundled in port-channel
@@ -177,3 +177,25 @@ Group  Port-channel  Protocol    Ports
 ------+-------------+-----------+-----------------------------------------------
 1      Po1(SU)         LACP      Et0/0(P)    Et0/1(P) 
 ```
+В Москве так же был организован etherchannel. Для эффективного использования избыточных L2 каналов, настроено spaning-tree в режиме mst. Для разных групп вланов используются различные пути.
+К примеру топология на SW2 для группу с vlan 21
+```
+MST21
+  Spanning tree enabled protocol mstp
+  Root ID    Priority    24597
+             Address     aabb.cc00.4000
+             Cost        1000
+             Port        2 (Ethernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32789  (priority 32768 sys-id-ext 21)
+             Address     aabb.cc00.2000
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Et0/0               Desg FWD 2000000   128.1    Shr 
+Et0/1               Root FWD 1000      128.2    Shr 
+Et0/2               Desg FWD 2000000   128.3    Shr Edge 
+```
+В результате клиентские vlan имеют по одному активному линку к каждому L3 коммутатору(SW4,5). В дополнение к этому на SW4 и SW5 реализовано резервирование шлюза по умолчанию с балансировкой нагрузки при помощи протокола glbp.
