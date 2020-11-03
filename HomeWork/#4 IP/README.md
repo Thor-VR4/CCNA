@@ -179,7 +179,7 @@ Group  Port-channel  Protocol    Ports
 1      Po1(SU)         LACP      Et0/0(P)    Et0/1(P) 
 ```
 В Москве так же был организован etherchannel. Для эффективного использования избыточных L2 каналов, настроено spaning-tree в режиме mst. Для разных групп вланов используются различные пути.
-К примеру топология на SW2 для группу с vlan 21
+К примеру топология на SW2 для группы с vlan 21
 ```
 MST21
   Spanning tree enabled protocol mstp
