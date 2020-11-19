@@ -1,5 +1,6 @@
+
 !
-! Last configuration change at 10:22:28 EET Thu Nov 19 2020
+! Last configuration change at 11:10:00 EET Thu Nov 19 2020
 version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -77,6 +78,7 @@ interface Ethernet0/0
  description R26
  ip address 10.2.3.34 255.255.255.252
  ipv6 address FE80::28 link-local
+ ipv6 address 2A03:5A00:1F:204:26::2/126
 !
 interface Ethernet0/1
  no shutdown
@@ -105,7 +107,7 @@ interface Ethernet0/2.20
  ip policy route-map Clients
  ipv6 address FE80::28 link-local
  ipv6 address 2A03:5A00:1F:400::1/64
- ipv6 policy route-map Clients
+ ipv6 policy route-map V6
  no cdp enable
 !
 interface Ethernet0/2.21
@@ -115,7 +117,7 @@ interface Ethernet0/2.21
  ip policy route-map Clients
  ipv6 address FE80::28 link-local
  ipv6 address 2A03:5A00:1F:401::1/64
- ipv6 policy route-map Clients
+ ipv6 policy route-map V6
  no cdp enable
 !
 interface Ethernet0/3
@@ -183,8 +185,8 @@ access-list 2 permit 10.4.1.0 0.0.0.255
 no cdp run
 ipv6 route 2A03:5A00:1F:204::25/128 Ethernet0/1 FE80::25
 ipv6 route 2A03:5A00:1F:204::26/128 Ethernet0/0 FE80::26
-ipv6 route ::/0 Ethernet0/1 FE80::25 10
 ipv6 route ::/0 Ethernet0/0 FE80::26 10
+ipv6 route ::/0 Ethernet0/1 FE80::25 10
 !
 route-map Clients permit 10
  match ip address 1
@@ -194,13 +196,13 @@ route-map Clients permit 20
  match ip address 2
  set ip next-hop 10.2.3.33
 !
-route-map Clients permit 30
+route-map V6 permit 10
  match ipv6 address client_1
  set ipv6 next-hop 2A03:5A00:1F:204:25::1
 !
-route-map Clients permit 40
+route-map V6 permit 20
  match ipv6 address client_2
- set ipv6 next-hop 2A03:5A00:1F:204::26
+ set ipv6 next-hop 2A03:5A00:1F:204::25 2A03:5A00:1F:204:26::1
 !
 !
 !
