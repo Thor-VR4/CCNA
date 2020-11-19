@@ -1,6 +1,5 @@
-
 !
-! Last configuration change at 18:57:12 EET Wed Nov 18 2020
+! Last configuration change at 10:22:28 EET Thu Nov 19 2020
 version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -84,6 +83,7 @@ interface Ethernet0/1
  description R25
  ip address 10.2.3.30 255.255.255.252
  ipv6 address FE80::28 link-local
+ ipv6 address 2A03:5A00:1F:204:25::2/126
 !
 interface Ethernet0/2
  no shutdown
@@ -105,7 +105,7 @@ interface Ethernet0/2.20
  ip policy route-map Clients
  ipv6 address FE80::28 link-local
  ipv6 address 2A03:5A00:1F:400::1/64
- ipv6 policy route-map PC
+ ipv6 policy route-map Clients
  no cdp enable
 !
 interface Ethernet0/2.21
@@ -196,7 +196,7 @@ route-map Clients permit 20
 !
 route-map Clients permit 30
  match ipv6 address client_1
- set ipv6 next-hop 2A03:5A00:1F:204::25
+ set ipv6 next-hop 2A03:5A00:1F:204:25::1
 !
 route-map Clients permit 40
  match ipv6 address client_2
