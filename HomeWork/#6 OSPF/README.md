@@ -1,55 +1,20 @@
 # OSPF
-Лабараторное задание №5 по работе с PBR.
+Лабараторное задание №6 по работе с OSPF.
 
 ## Задание
-1. [Настроить политику маршрутизации для сетей офиса Чокурдах и распределить трафик между двумя линками с провайдером](#chapter-0)
-2. [Настроить отслеживание линка через технологию IP SLA](#chapter-1)
-3. [Настройть для офиса Лабытнанги маршрут по-умолчанию](#chapter-2)
+Настроить OSPF офисе Москва, hазделить сеть на зоны и настроить фильтрацию между зонами.
+1. [Создание зоны 0](#chapter-0)
+2. [Создание зоны 10](#chapter-1)
+3. [Создание зоны 101](#chapter-2)
+4. [Создание зоны 102](#chapter-2)
 
 ## Схема сети
-![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%234%20IP/IP.png "Стенд №4")
+![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%236%20OSPF/OSPF.png "Стенд №6")
 
 <a id="chapter-0"></a>
-## Настроить политику маршрутизации для сетей офиса Чокурдах и распределить трафик между двумя линками с провайдером
+## Создание зоны 0
+Участники зоны 0
 
-В оффисе Чокурдах присутствуют сети 10.4.0.0/16 и 2A03:5A00:1F:4/56. Все они подключены напрямую к R28
-v4:
-```
-C        10.4.0.0/24 is directly connected, Ethernet0/2.20
-L        10.4.0.1/32 is directly connected, Ethernet0/2.20
-C        10.4.1.0/24 is directly connected, Ethernet0/2.21
-L        10.4.1.1/32 is directly connected, Ethernet0/2.21
-C        10.4.2.0/24 is directly connected, Ethernet0/2.10
-L        10.4.2.1/32 is directly connected, Ethernet0/2.10
-C        10.4.4.28/32 is directly connected, Loopback0
-```
-v6:
-```
-C   2A03:5A00:1F:400::/64 [0/0]     via Ethernet0/2.20, directly connected
-L   2A03:5A00:1F:400::1/128 [0/0]     via Ethernet0/2.20, receive
-C   2A03:5A00:1F:401::/64 [0/0]     via Ethernet0/2.21, directly connected
-L   2A03:5A00:1F:401::1/128 [0/0]     via Ethernet0/2.21, receive
-C   2A03:5A00:1F:402::/64 [0/0]     via Ethernet0/2.10, directly connected
-L   2A03:5A00:1F:402::28/128 [0/0]     via Ethernet0/2.10, receive
-LC  2A03:5A00:1F:404::28/128 [0/0]     via Loopback0, receive
-```
-Для распределения трафика между линками с провайдерами, используються маршруты по умолчанию с одинаковой метрикой:
-```
-S*    0.0.0.0/0 [10/0] via 10.2.3.33
-                [10/0] via 10.2.3.29
-S   ::/0 [10/0]
-     via FE80::25, Ethernet0/1
-     via FE80::26, Ethernet0/0
-``` 
-Для клиентских сетей создана политика, указывающая next-hop в зависимости от сети источника.
-К примеру:
-```
-access-list 1 permit 10.4.0.0 0.0.0.255
-!
-route-map Clients permit 10
- match ip address 1
- set ip next-hop 10.2.3.29
-```
 
 <a id="chapter-1"></a>
 ## Настроить отслеживание линка через технологию IP SLA
