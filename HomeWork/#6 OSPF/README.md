@@ -19,6 +19,7 @@
 ## Создание зоны 0
 Участники зоны 0
 Устройство | Интерфейс 
+--- | --- 
 R14 | Ethernet0/0
 R14 | Ethernet0/1
 R14 | Loopback 0
@@ -78,6 +79,7 @@ Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
 Так как взаимодействие с другими сетями в зоне 10 происходит исключительно через OSPF зону 0, то area 10 создана как Totaly Stub.
 Участники зоны 10
 Устройство | Интерфейс 
+--- | --- 
 R12 | Ethernet0/0
 R12 | Ethernet0/1
 R13 | Ethernet0/0
