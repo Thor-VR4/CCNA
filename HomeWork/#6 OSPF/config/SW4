@@ -1,0 +1,226 @@
+
+!
+! Last configuration change at 20:19:26 EET Mon Nov 23 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname SW4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$RC9O$mQaRJj.oCjc4dj80t7Rb./
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+!
+ip dhcp excluded-address 10.0.0.1 10.0.0.10
+ip dhcp excluded-address 10.0.1.1 10.0.1.10
+!
+ip dhcp pool Vlan20
+ network 10.0.0.0 255.255.255.0
+ default-router 10.0.0.1 
+!
+ip dhcp pool Vlan21
+ network 10.0.1.0 255.255.255.0
+ default-router 10.0.1.1 
+!
+!
+no ip domain-lookup
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+!
+!
+spanning-tree mode mst
+spanning-tree extend system-id
+!
+spanning-tree mst configuration
+ revision 1
+ instance 10 vlan 10
+ instance 21 vlan 21
+!
+spanning-tree mst 0,10,20-21 priority 24576
+!
+vlan internal allocation policy ascending
+no cdp run
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ no shutdown
+ description to_SW5
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet0/0
+ no shutdown
+ description SW3
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet0/1
+ no shutdown
+ description SW2
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface Ethernet0/2
+ no shutdown
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ no shutdown
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface Ethernet1/0
+ no shutdown
+ description R12
+ no switchport
+ ip address 10.0.3.2 255.255.255.252
+ duplex auto
+ ipv6 address FE80::4 link-local
+ ospfv3 network point-to-point
+ ospfv3 1001 ipv6 area 10
+ ospfv3 1001 ipv4 area 10
+!
+interface Ethernet1/1
+ no shutdown
+ description R13
+ no switchport
+ ip address 10.0.3.18 255.255.255.252
+ duplex auto
+ ipv6 address FE80::4 link-local
+ ospfv3 network point-to-point
+ ospfv3 1001 ipv6 area 10
+ ospfv3 1001 ipv4 area 10
+!
+interface Ethernet1/2
+ no shutdown
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ shutdown
+!
+interface Vlan10
+ no shutdown
+ ip address 10.0.2.4 255.255.255.0
+ standby version 2
+ standby 1 ip 10.0.2.1
+ ipv6 address FE80::4 link-local
+ ipv6 address 2A03:5A00:1F:2::4/64
+ ospfv3 1001 ipv6 area 10
+ ospfv3 1001 ipv4 area 10
+!
+interface Vlan11
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Vlan20
+ no shutdown
+ ip address 10.0.0.4 255.255.255.0
+ ipv6 address FE80::4 link-local
+ ipv6 address 2A03:5A00:1F::4/64
+ ipv6 nd router-preference High
+ ospfv3 1001 ipv6 area 10
+ ospfv3 1001 ipv4 area 10
+ glbp 20 ip 10.0.0.1
+ glbp 20 priority 110
+ glbp 20 preempt delay minimum 60
+!
+interface Vlan21
+ no shutdown
+ ip address 10.0.1.4 255.255.255.0
+ ipv6 address FE80::4 link-local
+ ipv6 address 2A03:5A00:1F:1::4/64
+ ospfv3 1001 ipv6 area 10
+ ospfv3 1001 ipv4 area 10
+ glbp 21 ip 10.0.1.1
+!
+router ospfv3 1001
+ router-id 0.0.0.4
+ !
+ address-family ipv4 unicast
+  passive-interface Vlan10
+  passive-interface Vlan20
+  passive-interface Vlan21
+  area 10 stub
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  passive-interface Vlan10
+  passive-interface Vlan20
+  passive-interface Vlan21
+  area 10 stub
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd  Authorized Access Only! 
+!
+line con 0
+ exec-timeout 0 0
+ password 7 13061E010803
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password 7 00071A150754
+ logging synchronous
+ login
+!
+!
+end

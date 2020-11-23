@@ -1,0 +1,164 @@
+
+!
+! Last configuration change at 21:41:11 EET Mon Nov 23 2020
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$NyF2$t5oBwmPuC7CgdOCOtOeQi/
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+no cdp run
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 10.0.4.15 255.255.255.255
+ ipv6 address 2A03:5A00:1F:4::15/128
+ ospfv3 1001 ipv4 area 0
+ ospfv3 1001 ipv6 area 0
+!
+interface Ethernet0/0
+ no shutdown
+ description R13
+ ip address 10.0.3.30 255.255.255.252
+ ipv6 address FE80::15 link-local
+ ospfv3 network point-to-point
+ ospfv3 1001 ipv4 area 0
+ ospfv3 1001 ipv6 area 0
+!
+interface Ethernet0/1
+ no shutdown
+ description R12
+ ip address 10.0.3.10 255.255.255.252
+ ipv6 address FE80::15 link-local
+ ospfv3 network point-to-point
+ ospfv3 1001 ipv4 area 0
+ ospfv3 1001 ipv6 area 0
+!
+interface Ethernet0/2
+ no shutdown
+ description R21
+ ip address 10.0.3.37 255.255.255.252
+ ipv6 address FE80::15 link-local
+!
+interface Ethernet0/3
+ no shutdown
+ description R20
+ ip address 10.0.3.33 255.255.255.252
+ ipv6 address FE80::15 link-local
+ ospfv3 network point-to-point
+ ospfv3 1001 ipv4 area 102
+ ospfv3 1001 ipv6 area 102
+!
+router ospfv3 1001
+ router-id 0.0.0.15
+ !
+ address-family ipv4 unicast
+  default-information originate always
+  area 102 filter-list prefix 101_deny in
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  default-information originate always
+  area 102 filter-list prefix 101_deny_v6 in
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Null0
+!
+!
+ip prefix-list 101_deny seq 4 deny 10.0.3.40/30
+ip prefix-list 101_deny seq 5 deny 10.0.4.19/32
+ip prefix-list 101_deny seq 10 permit 0.0.0.0/0 le 32
+ipv6 route ::/0 Null0
+!
+!
+ipv6 prefix-list 101_deny_v6 seq 5 deny 2A03:5A00:1F:4::19/128
+ipv6 prefix-list 101_deny_v6 seq 10 permit ::/0 le 128
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd  Authorized Access Only! 
+!
+line con 0
+ exec-timeout 0 0
+ password 7 121A0C041104
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password 7 13061E010803
+ logging synchronous
+ login
+ transport input all
+!
+!
+end
