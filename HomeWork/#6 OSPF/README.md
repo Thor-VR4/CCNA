@@ -32,6 +32,7 @@ R12 | Loopback 0
 R13 | Ethernet0/2
 R13 | Ethernet0/3
 R13 | Loopback 0
+
 Пример конфигурации на R14:
 ```
 router ospfv3 1001
