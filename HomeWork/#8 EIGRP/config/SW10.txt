@@ -1,0 +1,226 @@
+
+!
+! Last configuration change at 18:59:59 EET Fri Nov 27 2020
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW10
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$E2Rj$LNepVKNUY..VqDor0hyfw0
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+!
+ip dhcp excluded-address 10.3.1.1 10.3.1.10
+!
+ip dhcp pool Vlan21
+ network 10.3.1.0 255.255.255.0
+ default-router 10.3.1.1 
+!
+!
+ip dhcp snooping vlan 21
+no ip dhcp snooping information option
+ip dhcp snooping
+no ip domain-lookup
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ no shutdown
+ description SW9
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+!
+interface Ethernet0/0
+ no shutdown
+ description SW9
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/1
+ no shutdown
+ description SW9
+ switchport trunk allowed vlan 10,20,21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/2
+ no shutdown
+ description VPC
+ switchport access vlan 21
+ switchport mode access
+ spanning-tree portfast edge
+ spanning-tree bpdufilter enable
+!
+interface Ethernet0/3
+ no shutdown
+ description R16
+ no switchport
+ ip address 10.3.3.2 255.255.255.252
+ duplex auto
+ ipv6 address FE80::10 link-local
+ spanning-tree portfast edge
+ spanning-tree bpdufilter enable
+!
+interface Ethernet1/0
+ no shutdown
+ description R17
+ no switchport
+ ip address 10.3.3.22 255.255.255.252
+ duplex auto
+ ipv6 address FE80::10 link-local
+ spanning-tree portfast edge
+ spanning-tree bpdufilter enable
+!
+interface Ethernet1/1
+ no shutdown
+ shutdown
+!
+interface Ethernet1/2
+ no shutdown
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ shutdown
+!
+interface Vlan10
+ no shutdown
+ ip address 10.3.2.10 255.255.255.0
+ ipv6 address FE80::10 link-local
+ ipv6 address 2A03:5A00:1F:302::10/128
+!
+interface Vlan21
+ no shutdown
+ ip address 10.3.1.1 255.255.255.0
+ ipv6 address FE80::10 link-local
+ ipv6 address 2A03:5A00:1F:301::1/64
+!
+!
+router eigrp SP
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  af-interface default
+   shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet1/0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Vlan10
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Vlan21
+   no shutdown
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.3.0.0 0.0.7.255
+  eigrp router-id 0.0.0.10
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  af-interface default
+   shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet1/0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Vlan10
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Vlan21
+   no shutdown
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 0.0.0.10
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd  Authorized Access Only! 
+!
+line con 0
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+ login
+!
+!
+end
