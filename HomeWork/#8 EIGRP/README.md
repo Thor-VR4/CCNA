@@ -10,7 +10,7 @@
 4. [Проверка работоспособности](#chapter-3)
 
 ## Схема сети
-![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%237%20ISIS/isis.png "Стенд №7")
+![alt-текст](https://github.com/Thor-VR4/CCNA/blob/master/HomeWork/%238%20EIGRP/EIGRP.png "Стенд №8")
 
 <a id="chapter-0"></a>
 ## Создание зоны 2222
