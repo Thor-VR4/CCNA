@@ -1,0 +1,247 @@
+
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R18
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$K.MK$mVinseMuoBypeUvRiyHGj.
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 10.3.4.18 255.255.255.255
+ ipv6 address 2A03:5A00:1F:304::18/128
+!
+interface Ethernet0/0
+ no shutdown
+ description R16
+ ip address 10.3.3.14 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+!
+interface Ethernet0/1
+ no shutdown
+ description R17
+ ip address 10.3.3.26 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+!
+interface Ethernet0/2
+ no shutdown
+ description R24
+ ip address 10.3.3.29 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2A03:5A00:1F:303::18/64
+!
+interface Ethernet0/3
+ no shutdown
+ description R26
+ ip address 10.3.3.33 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::18 link-local
+ ipv6 address 2A03:5A00:1F:203::18/64
+!
+!
+router eigrp SP
+ !
+ address-family ipv4 unicast autonomous-system 2042
+  !
+  af-interface default
+   shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   summary-address 0.0.0.0 0.0.0.0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   summary-address 0.0.0.0 0.0.0.0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Loopback0
+   no shutdown
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.3.3.0 0.0.0.255
+  network 10.3.4.0 0.0.0.255
+  eigrp router-id 0.0.0.18
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 2042
+  !
+  af-interface default
+   shutdown
+  exit-af-interface
+  !
+  af-interface Loopback0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   summary-address ::/0
+   no shutdown
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   summary-address ::/0
+   no shutdown
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 0.0.0.18
+ exit-address-family
+!
+router bgp 2042
+ bgp router-id 10.3.4.18
+ bgp log-neighbor-changes
+ neighbor 10.3.3.30 remote-as 520
+ neighbor 10.3.3.30 description R24
+ neighbor 10.3.3.34 remote-as 520
+ neighbor 10.3.3.34 description R26
+ neighbor 2A03:5A00:1F:203::26 remote-as 520
+ neighbor 2A03:5A00:1F:203::26 description R26
+ neighbor 2A03:5A00:1F:303::24 remote-as 520
+ neighbor 2A03:5A00:1F:303::24 description R24
+ !
+ address-family ipv4
+  network 10.3.0.0 mask 255.255.0.0
+  neighbor 10.3.3.30 activate
+  neighbor 10.3.3.30 prefix-list 2042_out_v4 out
+  neighbor 10.3.3.34 activate
+  neighbor 10.3.3.34 prefix-list 2042_out_v4 out
+  no neighbor 2A03:5A00:1F:203::26 activate
+  no neighbor 2A03:5A00:1F:303::24 activate
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv6
+  maximum-paths 2
+  network 2A03:5A00:1F:300::/56
+  neighbor 2A03:5A00:1F:203::26 activate
+  neighbor 2A03:5A00:1F:203::26 prefix-list 2042_out_v6 out
+  neighbor 2A03:5A00:1F:303::24 activate
+  neighbor 2A03:5A00:1F:303::24 prefix-list 2042_out_v6 out
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat pool POOL2042 10.3.5.0 10.3.5.4 netmask 255.255.255.248
+ip nat inside source list 1 pool POOL2042
+ip route 10.3.0.0 255.255.0.0 Null0
+!
+!
+ip prefix-list 2042_out_v4 seq 5 permit 10.3.0.0/16 le 24
+ip sla auto discovery
+ip sla 1
+ icmp-echo 10.3.3.30 source-interface Ethernet0/2
+ tag R24
+ threshold 2000
+ timeout 2000
+ frequency 5
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 10.3.3.34 source-interface Ethernet0/3
+ tag R26
+ threshold 2000
+ timeout 2000
+ frequency 5
+ip sla schedule 2 life forever start-time now
+access-list 1 deny   10.3.3.28 0.0.0.3
+access-list 1 deny   10.3.3.32 0.0.0.3
+access-list 1 permit 10.3.0.0 0.0.255.255
+no cdp run
+ipv6 route 2A03:5A00:1F:300::/56 Null0
+!
+!
+ipv6 prefix-list 2042_out_v6 seq 5 permit 2A03:5A00:1F:300::/56 le 64
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+banner motd  Authorized Access Only! 
+!
+line con 0
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+ login
+ transport input all
+!
+!
+end
