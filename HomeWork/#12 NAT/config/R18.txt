@@ -1,5 +1,6 @@
 
 !
+! Last configuration change at 12:07:01 EET Mon Feb 1 2021
 version 15.2
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -191,7 +192,7 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip nat pool POOL2042 10.3.5.0 10.3.5.4 netmask 255.255.255.248
+ip nat pool POOL2042 10.3.5.0 10.3.5.4 prefix-length 23
 ip nat inside source list 1 pool POOL2042
 ip route 10.3.0.0 255.255.0.0 Null0
 !
